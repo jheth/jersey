@@ -13,15 +13,15 @@ import org.junit.Test;
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHPullRequest;
 
-import com.google.gson.Gson;
+import com.netflix.service.util.RepoCountPair;
 
-public class GithubTest {
+public class GithubServiceTest {
 
-	private Github github;
+	private GithubService github;
 
 	@Before
 	public void setUp() throws IOException {
-		this.github = new Github();
+		this.github = new GithubService();
 	}
 
 	//@Test
@@ -32,7 +32,7 @@ public class GithubTest {
 	
 	
 	//@Test
-	public void testGetPullRequestStats()
+	public void testGetPullRequestStats() throws IOException
 	{
 		List<GHPullRequest> pullRequests = this.github.getOrganizationPullRequests("Netflix");
 		Map<String, Integer> stats = this.github.pullRequestStats(pullRequests);
@@ -44,19 +44,15 @@ public class GithubTest {
 	}
 	
 	@Test
-	public void testGetTopReposByPullRequests() {
+	// TODO: Fix limits.
+	public void testGetTopReposByPullRequests() throws IOException {
 		SortedSet<Map.Entry<String, Integer>> sortedSet = this.github.getTopReposByPullRequests("Netflix", 5);
 
-		List<DataResponse> dataList = new ArrayList<DataResponse>();
+		List<RepoCountPair> dataList = new ArrayList<RepoCountPair>();
 		
 		for (Map.Entry<String, Integer> entry : sortedSet) {
-			dataList.add(new DataResponse(entry.getKey(), entry.getValue()));
+			dataList.add(new RepoCountPair(entry.getKey(), entry.getValue()));
 		}
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(dataList);
-		System.out.println(json);
-		//System.out.println(sortedSet);
 	}
 
 }

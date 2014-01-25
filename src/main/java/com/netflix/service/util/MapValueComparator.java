@@ -1,4 +1,4 @@
-package com.netflix.service;
+package com.netflix.service.util;
 
 import java.util.Comparator;
 import java.util.Map;
