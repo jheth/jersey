@@ -1,4 +1,4 @@
-package com.netflix.service.exception;
+package com.hethmonster.service.exception;
 
 import java.io.IOException;
 

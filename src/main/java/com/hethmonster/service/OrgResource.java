@@ -1,4 +1,4 @@
-package com.netflix.service;
+package com.hethmonster.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 
-import com.netflix.service.util.RepoCountPair;
+import com.hethmonster.service.util.RepoCountPair;
 
 @Path("/org/{orgName}")
 @Produces(MediaType.APPLICATION_JSON)

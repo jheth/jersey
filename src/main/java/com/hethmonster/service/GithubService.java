@@ -1,4 +1,4 @@
-package com.netflix.service;
+package com.hethmonster.service;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
-import com.netflix.service.util.MapValueComparator;
+import com.hethmonster.service.util.MapValueComparator;
 
 /**
  * Wrapper class to hide the Kohsuke Github API implementation.
