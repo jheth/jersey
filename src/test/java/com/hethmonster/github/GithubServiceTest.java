@@ -1,4 +1,4 @@
-package com.hethmonster.service;
+package com.hethmonster.github;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHPullRequest;
 
-import com.hethmonster.service.GithubService;
+import com.hethmonster.github.GithubService;
 import com.hethmonster.service.util.RepoCountPair;
 
 public class GithubServiceTest {

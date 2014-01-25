@@ -8,7 +8,6 @@ configurations {
 }
 
 repositories {
-   // flatDir { dirs "lib" }
    mavenCentral()
 }
 
@@ -24,7 +23,7 @@ dependencies {
     compile "org.kohsuke:github-api:1.47"
 
     runtime "asm:asm-commons:3.1"
-    runtime "com.sun.jersey:jersey-client:1.17.1"
+    runtime "com.sun.jersey:jersey-servlet:1.17.1"
     runtime "com.sun.jersey:jersey-core:1.17.1"
     runtime "com.sun.jersey:jersey-json:1.17.1"
     runtime "org.codehaus.jackson:jackson-jaxrs:1.7.1"
@@ -33,10 +32,6 @@ dependencies {
     runtime "org.codehaus.jackson:jackson-xc:1.7.1"
     providedCompile "javax.servlet:servlet-api:2.5"
     testCompile "junit:junit:4.11"
-}
-
-war {
-    webXml = file('resources/web.xml') // copies a file to WEB-INF/web.xml
 }
 
 jettyRunWar {

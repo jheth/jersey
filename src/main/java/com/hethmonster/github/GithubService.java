@@ -1,4 +1,4 @@
-package com.hethmonster.service;
+package com.hethmonster.github;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import com.hethmonster.service.OrgResource;
 import com.hethmonster.service.util.MapValueComparator;
 
 /**

@@ -1,6 +1,8 @@
 package com.hethmonster.service.exception;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -12,7 +14,9 @@ public class FileNotFoundMapper implements
 
 	@Override
 	public Response toResponse(FileNotFoundException ex) {
-		return Response.status(404).entity(ex.getMessage())
-				.type("application/json").build();
+		Map<String, String> error = new HashMap<String, String>();
+		error.put("error", "Resource Not Found: " + ex.getMessage());
+		return Response.status(404).entity(error).type("application/json")
+				.build();
 	}
 }

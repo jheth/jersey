@@ -1,10 +1,8 @@
 package com.hethmonster.service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,70 +19,84 @@ import javax.ws.rs.core.MediaType;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 
+import com.hethmonster.github.GithubService;
 import com.hethmonster.service.util.RepoCountPair;
 
+/**
+ * Jersey Resource Class for exposing /rest/org/{orgName} URLs.
+ * 
+ * Exceptions are handled through the exception mapper classes:
+ * 
+ * @see FileNotFoundMapper, IOExceptionmapper
+ * 
+ * @author jheth
+ */
 @Path("/org/{orgName}")
 @Produces(MediaType.APPLICATION_JSON)
 public class OrgResource {
 
+	/**
+	 * 
+	 * @param orgName
+	 * @return Map<String, Object>
+	 * @throws IOException
+	 */
 	@GET
-	public Map<String, Object> getOrg(@PathParam("orgName") String orgName) throws IOException
-	{
-		Map<String,Object> attrs = new HashMap<String, Object>();
+	public Map<String, Object> getOrg(@PathParam("orgName") String orgName)
+			throws IOException {
+		Map<String, Object> attrs = new HashMap<String, Object>();
 
-		try {
-			GithubService github = new GithubService();
-			// Throws FileNotFoundException when orgName is invalid.
-			GHOrganization org = github.getOrganization(orgName);
-			attrs.put("name", org.getName());
-		} catch (FileNotFoundException fnf) {
-			attrs.put("error", "Organization Does Not Exist.");
-		} catch (IOException ioe) {
-			// TODO Auto-generated catch block
-			throw ioe;
-			//ioe.printStackTrace();
+		GithubService github = new GithubService();
+		// Throws FileNotFoundException when orgName is invalid.
+		GHOrganization org = github.getOrganization(orgName);
+
+		String[] properties = { "Name", "Location", "AvatarUrl", "Blog",
+				"Email", "CreatedAt" };
+
+		for (String prop : properties) {
+			java.lang.reflect.Method method;
+			try {
+				method = org.getClass().getMethod("get" + prop);
+				Object value = method.invoke(org);
+				attrs.put(prop.toLowerCase(), value);
+			} catch (Exception e) {
+				System.out.println("Failed to get value for " + prop + " "
+						+ e.getMessage());
+			}
 		}
 
 		return attrs;
 	}
-	
+
 	@GET
 	@Path("/repos")
 	public Set<String> getOrgRepositories(@PathParam("orgName") String orgName)
-	{
-		Set<String> repos = new HashSet<String>();
-		try {
-			GithubService github = new GithubService();
-			Map<String, GHRepository> repoMap = github.getRepositories(orgName);
-			repos = repoMap.keySet();
-
-		} catch (IOException e) {
-			// Return Empty list
-		}
-		return repos;
+			throws IOException {
+		GithubService github = new GithubService();
+		Map<String, GHRepository> repoMap = github.getRepositories(orgName);
+		return repoMap.keySet();
 	}
 
 	@GET
 	@Path("/top")
-	public List<RepoCountPair> getTopReposByPullRequest(@PathParam("orgName") String orgName, @DefaultValue("5") @QueryParam("limit") int limit) {
+	public List<RepoCountPair> getTopReposByPullRequest(
+			@PathParam("orgName") String orgName,
+			@DefaultValue("5") @QueryParam("limit") int limit)
+			throws IOException {
 
-		try {
-			GithubService github = new GithubService();
-			SortedSet<Map.Entry<String, Integer>> sortedSet = github.getTopReposByPullRequests(orgName, limit);
+		GithubService github = new GithubService();
+		SortedSet<Map.Entry<String, Integer>> sortedSet = github
+				.getTopReposByPullRequests(orgName, limit);
 
-			List<RepoCountPair> dataList = new ArrayList<RepoCountPair>();
-			
-			for (Map.Entry<String, Integer> entry : sortedSet) {
-				dataList.add(new RepoCountPair(entry.getKey(), entry.getValue()));
-				if (dataList.size() >= limit) {
-					break;
-				}
+		List<RepoCountPair> dataList = new ArrayList<RepoCountPair>();
+
+		for (Map.Entry<String, Integer> entry : sortedSet) {
+			dataList.add(new RepoCountPair(entry.getKey(), entry.getValue()));
+			if (dataList.size() >= limit) {
+				break;
 			}
-
-			return dataList;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return new ArrayList<RepoCountPair>();
 		}
+
+		return dataList;
 	}
 }
