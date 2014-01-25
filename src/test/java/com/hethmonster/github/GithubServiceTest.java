@@ -1,58 +1,54 @@
 package com.hethmonster.github;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kohsuke.github.GHMyself;
+import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHPullRequest;
 
-import com.hethmonster.github.GithubService;
 import com.hethmonster.service.util.RepoCountPair;
 
 public class GithubServiceTest {
 
 	private GithubService github;
+	private String orgName = "Netflix";
 
 	@Before
 	public void setUp() throws IOException {
 		this.github = new GithubService();
 	}
 
-	//@Test
-	public void testUserInformation() throws IOException {
-		GHMyself user = this.github.getMyself();
-		assertEquals("Joe Heth", user.getName());
-	}
-	
-	
-	//@Test
-	public void testGetPullRequestStats() throws IOException
-	{
-		List<GHPullRequest> pullRequests = this.github.getOrganizationPullRequests("Netflix");
-		Map<String, Integer> stats = this.github.pullRequestStats(pullRequests);
-
-		System.out.println(stats);
-		for (String key : stats.keySet()) {
-			String.format(key + " => " + stats.get(key));
-		}
+	@Test
+	public void testOrganizationName() throws IOException {
+		GHOrganization user = this.github.getOrganization(this.orgName);
+		assertNotNull(user.getName());
 	}
 	
 	@Test
-	// TODO: Fix limits.
-	public void testGetTopReposByPullRequests() throws IOException {
-		SortedSet<Map.Entry<String, Integer>> sortedSet = this.github.getTopReposByPullRequests("Netflix", 5);
+	public void testGetPullRequestStats() throws IOException
+	{
+		List<GHPullRequest> pullRequests = this.github.getOrganizationPullRequests(this.orgName);
+		Map<String, Integer> stats = this.github.pullRequestStats(pullRequests);
 
-		List<RepoCountPair> dataList = new ArrayList<RepoCountPair>();
+		assertTrue(stats.size() > 0);
+	}
+	
+	@Test
+	public void testGetTopReposByPullRequests() throws IOException {
+		List<RepoCountPair> results = this.github.getTopReposByPullRequests(this.orgName, 5);
+		assertEquals(5, results.size());
 		
-		for (Map.Entry<String, Integer> entry : sortedSet) {
-			dataList.add(new RepoCountPair(entry.getKey(), entry.getValue()));
+		int previousPullCount = -1;
+		for (RepoCountPair pair : results) {
+			if (previousPullCount != -1 && pair.getPullCount() > previousPullCount) {
+				fail("Results are not sorted properly by pull count.");
+			}
+			previousPullCount = pair.getPullCount();
 		}
 	}
 

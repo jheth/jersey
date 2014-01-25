@@ -1,12 +1,10 @@
 package com.hethmonster.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -85,17 +83,8 @@ public class OrgResource {
 			throws IOException {
 
 		GithubService github = new GithubService();
-		SortedSet<Map.Entry<String, Integer>> sortedSet = github
+		List<RepoCountPair> dataList = github
 				.getTopReposByPullRequests(orgName, limit);
-
-		List<RepoCountPair> dataList = new ArrayList<RepoCountPair>();
-
-		for (Map.Entry<String, Integer> entry : sortedSet) {
-			dataList.add(new RepoCountPair(entry.getKey(), entry.getValue()));
-			if (dataList.size() >= limit) {
-				break;
-			}
-		}
 
 		return dataList;
 	}
