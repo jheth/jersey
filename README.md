@@ -31,19 +31,19 @@ Alternatively, you can have just the OAuth token in this file:
 
 Run Gradle
 
-    gradle build jettyWebApp
+    gradle build jettyRunWar
 
 Open Browser and Visit:
 
-    https://localhost:8088/jersey/org/{orgName}
-    https://localhost:8088/jersey/org/{orgName}/repos
-    https://localhost:8088/jersey/org/{orgName}/top?limit=5
+    http://localhost:8088/jersey/rest/org/{orgName}
+    http://localhost:8088/jersey/rest/org/{orgName}/repos
+    http://localhost:8088/jersey/rest/org/{orgName}/top?limit=5
 
 Or CURL away:
 
-    curl -X GET https://localhost:8088/jersey/org/{orgName}
-    curl -X GET https://localhost:8088/jersey/org/{orgName}/repos
-    curl -X GET https://localhost:8088/jersey/org/{orgName}/top?limit=5
+    curl -X GET http://localhost:8088/jersey/rest/org/{orgName}
+    curl -X GET http://localhost:8088/jersey/rest/org/{orgName}/repos
+    curl -X GET http://localhost:8088/jersey/rest/org/{orgName}/top?limit=5
 
 ### Eclipse
 
